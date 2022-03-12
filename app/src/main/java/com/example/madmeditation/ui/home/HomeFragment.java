@@ -40,29 +40,39 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     List<Quotes> quotesList = new ArrayList<>();
     List<Feelings> feelingsList = new ArrayList<>();
+    MyDialog dialog = new MyDialog(requireActivity());
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
+        homeViewModel =
+                new ViewModelProvider(this).get(HomeViewModel.class);
         View root = binding.getRoot();
 
         final TextView textView = binding.textHome;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-        binding.quote.setAdapter(new QuotesAdapter(quotesList));
+        homeViewModel.getText().observe(getViewLifecycleOwner(), s -> textView.setText(s));
         LinearLayoutManager l =
         new LinearLayoutManager(requireContext());
         l.setOrientation(LinearLayoutManager.HORIZONTAL);
         binding.quote.setLayoutManager(l);
+        binding.quote.setAdapter(new QuotesAdapter(requireContext(), quotesList));
+        homeViewModel.getQuotes().observe(getViewLifecycleOwner(), quotes -> ((QuotesAdapter)binding.quote.getAdapter()).setLocalDataSet(quotes));
         binding.feelings.setAdapter(new FeelingsAdapter(feelingsList));
         return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadQuotes();
+
+        //dialog.CreateDialog("","").show();
     }
 
     @Override
@@ -71,15 +81,7 @@ public class HomeFragment extends Fragment {
         binding = null;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MyDialog dialog = new MyDialog(requireActivity());
+    void loadQuotes(){
         mApiService.getInstance().getApi().getQuotes().enqueue(new Callback<List<Quotes>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -89,10 +91,10 @@ public class HomeFragment extends Fragment {
                         case 200: {
                             dialog.CreateDialog("Успех",String.valueOf(response.body().size())).show();
                             quotesList = response.body();
-                            QuotesAdapter adapter =
+                            /*QuotesAdapter adapter =
                             (QuotesAdapter)binding.quote.getAdapter();
                             adapter.setLocalDataSet(quotesList);
-                            adapter.notifyDataSetChanged();
+                            adapter.notifyDataSetChanged();*/
                         }break;
                         case 300:{
 
@@ -109,7 +111,8 @@ public class HomeFragment extends Fragment {
                 dialog.CreateDialog("Неполадки",t.getStackTrace().toString());
             }
         });
-
+    }
+    void loadFeelings(){
         mApiService.getInstance().getApi().getFeelings().enqueue(new Callback<List<Feelings>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -139,6 +142,5 @@ public class HomeFragment extends Fragment {
                 dialog.CreateDialog("Неполадки",t.getStackTrace().toString());
             }
         });
-        //dialog.CreateDialog("","").show();
     }
 }

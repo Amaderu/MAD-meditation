@@ -13,7 +13,7 @@ import com.example.madmeditation.common.Quotes;
 
 import java.util.List;
 
-public class FeelingsAdapter extends RecyclerView.Adapter<QuotesAdapter.ViewHolder> {
+public class FeelingsAdapter extends RecyclerView.Adapter<FeelingsAdapter.ViewHolder> {
 
     private List<Feelings> localDataSet;
 
@@ -47,7 +47,7 @@ public class FeelingsAdapter extends RecyclerView.Adapter<QuotesAdapter.ViewHold
     /**
      * Initialize the dataset of the Adapter.
      *
-     * @param dataSet List<Quotes> containing the data to populate views to be used
+     * @param dataSet List<Feelings> containing the data to populate views to be used
      * by RecyclerView.
      */
     public FeelingsAdapter(List<Feelings> dataSet) {
@@ -56,17 +56,17 @@ public class FeelingsAdapter extends RecyclerView.Adapter<QuotesAdapter.ViewHold
 
     // Create new views (invoked by the layout manager)
     @Override
-    public QuotesAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.quotes_view, viewGroup, false);
+                .inflate(R.layout.feelings_view, viewGroup, false);
 
-        return new QuotesAdapter.ViewHolder(view);
+        return new ViewHolder(view);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(QuotesAdapter.ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(ViewHolder viewHolder, final int position) {
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
