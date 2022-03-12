@@ -6,6 +6,8 @@ import com.example.madmeditation.common.Feelings;
 import com.example.madmeditation.common.Quotes;
 import com.example.madmeditation.common.User;
 
+import org.json.JSONObject;
+
 import java.util.List;
 
 import retrofit2.Call;
@@ -16,13 +18,15 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public interface mApi {
-    @GET("/api/quotes")
+    @GET("quotes")
     Call<List<Quotes>> getQuotes();
+    @GET("quotes")
+    Call<JSONObject> getQuotes_2();
 
-    @GET("/api/feelings")
+    @GET("feelings")
     Call<List<Feelings>> getFeelings();
 
     @FormUrlEncoded
-    @POST("/api/user/login")
+    @POST("user/login")
     Call<User> authorize(@Field("email") String email, @Field("password") String password);
 }

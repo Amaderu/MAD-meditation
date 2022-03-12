@@ -1,6 +1,7 @@
 package com.example.madmeditation;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 
 import com.example.madmeditation.common.BasicActivity;
 import com.example.madmeditation.common.Quotes;
@@ -26,7 +27,7 @@ public class MainActivity extends BasicActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
 
         BottomNavigationView navView = binding.navView;

@@ -10,19 +10,27 @@ import java.net.URLDecoder;
 
 public class Quotes {
     int id;
-    String tittle;
+    String title;
     @SerializedName("image")
     String imageUrl;
     String description;
 
-    public Quotes(int id, String tittle, String imageUrl, String description) {
+    public Quotes(int id, String title, String imageUrl, String description) {
         this.id = id;
-        this.tittle = tittle;
+        this.title = title;
         if(imageUrl.contains("\\"))
-            imageUrl = imageUrl.replace('\\','\b');
+            imageUrl = imageUrl.replace("\\","");
         this.imageUrl = imageUrl;
-        Log.e("FUCK", String.format("Quotes: %s",imageUrl));
+        Log.e("ohhh", String.format("Quotes: %s",imageUrl));
         this.description = description;
+    }
+    public Quotes(Quotes quotes){
+        this.id = quotes.id;
+        this.title = quotes.title;
+        if(quotes.imageUrl.contains("\\"))
+            quotes.imageUrl = imageUrl.replace("\\","");
+        this.imageUrl = quotes.imageUrl;
+        this.description = quotes.description;
     }
 
     public int getId() {
@@ -34,11 +42,11 @@ public class Quotes {
     }
 
     public String getTittle() {
-        return tittle;
+        return title;
     }
 
-    public void setTittle(String tittle) {
-        this.tittle = tittle;
+    public void setTittle(String title) {
+        this.title = title;
     }
 
     public String getImageUrl() {

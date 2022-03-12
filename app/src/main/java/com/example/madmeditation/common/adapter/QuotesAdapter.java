@@ -3,6 +3,7 @@ package com.example.madmeditation.common.adapter;
 import android.content.Context;
 import android.content.QuickViewConstants;
 import android.renderscript.ScriptGroup;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.ViewHolder
 
     public void setLocalDataSet(List<Quotes> localDataSet) {
         this.localDataSet = localDataSet;
+        Log.i("DataChanged", "setLocalDataSet: "+localDataSet.toString());
         //notifyDataSetChanged();
     }
 
