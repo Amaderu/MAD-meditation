@@ -4,14 +4,14 @@ import com.google.gson.annotations.SerializedName;
 
 public class Feelings {
     int id;
-    String tittle;
+    String title;
     @SerializedName("image")
     String imageUrl;
     int position;
 
-    public Feelings(int id, String tittle, String imageUrl, int position) {
+    public Feelings(int id, String title, String imageUrl, int position) {
         this.id = id;
-        this.tittle = tittle;
+        this.title = title;
         this.imageUrl = imageUrl;
         this.position = position;
     }
@@ -25,11 +25,11 @@ public class Feelings {
     }
 
     public String getTittle() {
-        return tittle;
+        return title;
     }
 
-    public void setTittle(String tittle) {
-        this.tittle = tittle;
+    public void setTittle(String title) {
+        this.title = title;
     }
 
     public String getImageUrl() {

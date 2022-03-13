@@ -3,7 +3,9 @@ package com.example.madmeditation.network;
 import androidx.annotation.NonNull;
 
 import com.example.madmeditation.common.Feelings;
+import com.example.madmeditation.common.FeelingsResponse;
 import com.example.madmeditation.common.Quotes;
+import com.example.madmeditation.common.QuotesResponse;
 import com.example.madmeditation.common.User;
 
 import org.json.JSONObject;
@@ -21,10 +23,10 @@ public interface mApi {
     @GET("quotes")
     Call<List<Quotes>> getQuotes();
     @GET("quotes")
-    Call<JSONObject> getQuotes_2();
+    Call<QuotesResponse> getQuotes_2();
 
     @GET("feelings")
-    Call<List<Feelings>> getFeelings();
+    Call<FeelingsResponse> getFeelings();
 
     @FormUrlEncoded
     @POST("user/login")

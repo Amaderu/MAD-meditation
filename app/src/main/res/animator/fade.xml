@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--<objectAnimator
+        android:duration="100"
+        android:propertyName=""
+        android:repeatCount="1"
+        android:repeatMode="reverse"
+        android:startOffset="1"
+        android:valueFrom="0.0"
+        android:valueTo="1.0"["restart" | "reverse"]android:valueType=["intType" |
+    "floatType"]/>-->
+    <objectAnimator
+        android:duration="1000"
+        android:repeatCount="1"
+        android:repeatMode="reverse">
+        <propertyValuesHolder android:propertyName="x" android:valueTo="400"/>
+        <propertyValuesHolder android:propertyName="y" android:valueTo="200"/>
+    </objectAnimator>
+
+    <!--<animator
+    android:duration="int"
+    android:repeatCount="int"
+    android:repeatMode=
+    android:startOffset="int"
+    android:valueFrom="float | int | color"
+    android:valueTo="float | int | color"["restart" | "reverse"]android:valueType=["intType" | "floatType"]/>-->
+
+</set>

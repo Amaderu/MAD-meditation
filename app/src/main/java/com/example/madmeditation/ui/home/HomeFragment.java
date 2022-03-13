@@ -21,7 +21,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.madmeditation.common.Feelings;
+import com.example.madmeditation.common.FeelingsResponse;
 import com.example.madmeditation.common.Quotes;
+import com.example.madmeditation.common.QuotesResponse;
 import com.example.madmeditation.common.adapter.FeelingsAdapter;
 import com.example.madmeditation.common.adapter.QuotesAdapter;
 import com.example.madmeditation.network.mApiService;
@@ -29,6 +31,7 @@ import com.example.madmeditation.network.mApiService;
 import com.example.madmeditation.R;
 import com.example.madmeditation.common.MyDialog;
 import com.example.madmeditation.databinding.FragmentHomeBinding;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -49,7 +52,7 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     List<Quotes> quotesList = new ArrayList<>();
     List<Feelings> feelingsList = new ArrayList<>();
-    //MyDialog dialog = new MyDialog(requireActivity());
+    MyDialog dialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,21 +69,21 @@ public class HomeFragment extends Fragment {
 
         final TextView textView = binding.textHome;
         homeViewModel.getText().observe(getViewLifecycleOwner(), s -> textView.setText(s));
-        LinearLayoutManager l =
-        new LinearLayoutManager(requireContext());
-        l.setOrientation(LinearLayoutManager.HORIZONTAL);
-        binding.quote.setLayoutManager(l);
+
         binding.quote.setAdapter(new QuotesAdapter(requireContext(), quotesList));
         homeViewModel.getQuotes().observe(getViewLifecycleOwner(), quotes -> ((QuotesAdapter)binding.quote.getAdapter()).setLocalDataSet(quotes));
-        binding.feelings.setAdapter(new FeelingsAdapter(feelingsList));
+        binding.feelings.setAdapter(new FeelingsAdapter(requireContext(), feelingsList));
+        //homeViewModel.getFeelings().observe(getViewLifecycleOwner(), feelings -> ((FeelingsAdapter)binding.feelings.getAdapter()).setLocalDataSet(feelings));
         return root;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        loadQuotes();
+         dialog = new MyDialog(requireActivity());
+        //loadQuotes();
         loadQuotes2();
+        loadFeelings();
 
         //dialog.CreateDialog("","").show();
     }
@@ -98,16 +101,18 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<List<Quotes>> call, Response<List<Quotes>> response) {
                 Toast.makeText(getContext(),"Baaff",(int)0).show();
-                Log.i("DataChanged", "loadQuotes: "+response.toString());
+                Log.i("DataChanged", "loadQuotes: "+response.body().toString());
+                Gson gson = new Gson();
+                //((JSONObject) response.raw().body()).get("data")
                 if(response.isSuccessful()){
                     switch (response.code()){
                         case 200: {
                             //dialog.CreateDialog("Успех",String.valueOf(response.body().size())).show();
                             quotesList = response.body();
-                            /*QuotesAdapter adapter =
+                            QuotesAdapter adapter =
                             (QuotesAdapter)binding.quote.getAdapter();
                             adapter.setLocalDataSet(quotesList);
-                            adapter.notifyDataSetChanged();*/
+                            adapter.notifyDataSetChanged();
                         }break;
                         case 300:{
 
@@ -128,28 +133,22 @@ public class HomeFragment extends Fragment {
     void loadQuotes2(){
         mApiService.getInstance().getApi()
                 .getQuotes_2()
-                .enqueue(new Callback<JSONObject>() {
+                .enqueue(new Callback<QuotesResponse>() {
                     @Override
-                    public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
+                    public void onResponse(Call<QuotesResponse> call, Response<QuotesResponse> response) {
                         Toast.makeText(getContext(),"Baaff",(int)0).show();
-                        Log.i("DataChanged", "loadQuotes: "+response.toString());
+                        Log.i("DataChanged", "loadQuotes_2: "+response.toString());
+                        Log.i("DataChanged", "loadQuotes_2: "+response.raw().toString());
                         if(response.isSuccessful()){
                             switch (response.code()){
                                 case 200: {
-                                    JSONObject jsonObject = response.body();
-                                    try {
-                                        JSONArray array = jsonObject.getJSONArray("data");
-                                        Log.e("DataChanged", "onResponse: "+array.toString() );
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    //dialog.CreateDialog("Успех",String.valueOf(response.body().size())).show();
-                                    //quotesList = response.body();
-                            /*QuotesAdapter adapter =
-                            (QuotesAdapter)binding.quote.getAdapter();
-                            adapter.setLocalDataSet(quotesList);
-                            adapter.notifyDataSetChanged();*/
+                                    quotesList = response.body().getData();
+                                    Log.i("DataChanged", "loadQuotes_2: "+response.body().getData());
+                                    QuotesAdapter adapter =
+                                            (QuotesAdapter)binding.quote.getAdapter();
+                                    adapter.setLocalDataSet(quotesList);
+                                    adapter.notifyDataSetChanged();
+                                    Log.i("DataChanged", "loadQuotes: "+response.body().toString());
                                 }break;
                                 case 300:{
 
@@ -157,26 +156,25 @@ public class HomeFragment extends Fragment {
                             }
                         }
                         else{
-                            //dialog.CreateDialog("Неполадки",response.message()).show();
+                            dialog.CreateDialog("Неполадки",response.message()).show();
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<JSONObject> call, Throwable t) {
-                        //dialog.CreateDialog("Неполадки",t.getStackTrace().toString());
+                    public void onFailure(Call<QuotesResponse> call, Throwable t) {
+                        dialog.CreateDialog("Неполадки",t.getStackTrace().toString());
                     }
                 });
     }
     void loadFeelings(){
-        mApiService.getInstance().getApi().getFeelings().enqueue(new Callback<List<Feelings>>() {
-            @SuppressLint("NotifyDataSetChanged")
+        mApiService.getInstance().getApi().getFeelings().enqueue(new Callback<FeelingsResponse>() {
             @Override
-            public void onResponse(Call<List<Feelings>> call, Response<List<Feelings>> response) {
+            public void onResponse(Call<FeelingsResponse> call, Response<FeelingsResponse> response) {
                 if(response.isSuccessful()){
                     switch (response.code()){
                         case 200: {
-                            //dialog.CreateDialog("Успех",String.valueOf(response.body().size())).show();
-                            feelingsList = response.body();
+                            //dialog.CreateDialog("Успех",String.valueOf(response.body().getData().size())).show();
+                            feelingsList = response.body().getData();
                             final FeelingsAdapter adapter =
                                     (FeelingsAdapter)binding.feelings.getAdapter();
                             adapter.setLocalDataSet(feelingsList);
@@ -188,13 +186,13 @@ public class HomeFragment extends Fragment {
                     }
                 }
                 else{
-                    //dialog.CreateDialog("Неполадки",response.message()).show();
+                    dialog.CreateDialog("Неполадки",response.message()).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Feelings>> call, Throwable t) {
-                //dialog.CreateDialog("Неполадки",t.getStackTrace().toString());
+            public void onFailure(Call<FeelingsResponse> call, Throwable t) {
+                dialog.CreateDialog("Неполадки",t.getStackTrace().toString());
             }
         });
     }

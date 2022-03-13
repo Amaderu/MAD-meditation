@@ -43,7 +43,8 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.ViewHolder
      * (custom ViewHolder).
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textView;
+        private final TextView tvTitle;
+        private final TextView tvDescription;
         private final ImageView imageView;
         QuotesViewBinding binding;
 
@@ -51,12 +52,17 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.ViewHolder
             super(binding.getRoot());
             this.binding = binding;
             // Define click listener for the ViewHolder's View
-            textView = binding.textView;
+            tvTitle = binding.title;
+            tvDescription = binding.description;
             imageView = binding.imageView;
         }
 
-        public TextView getTextView() {
-            return textView;
+        public TextView getTvTitle() {
+            return tvTitle;
+        }
+
+        public TextView getTvDescription() {
+            return tvDescription;
         }
 
         public ImageView getImageView() {
@@ -92,7 +98,8 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.ViewHolder
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
         Picasso.with(context).load(localDataSet.get(position).getImageUrl()).into(viewHolder.getImageView());
-        viewHolder.getTextView().setText(localDataSet.get(position).getTittle());
+        viewHolder.getTvTitle().setText(localDataSet.get(position).getTittle());
+        viewHolder.getTvDescription().setText(localDataSet.get(position).getDescription());
     }
 
     // Return the size of your dataset (invoked by the layout manager)
